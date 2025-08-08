@@ -13,12 +13,15 @@ import {
 // Anda bisa menemukannya di Project Settings > General > Your apps
 // ========================================================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDYc5nc-ZnTyza4lIFFBBzE2l0U2T-bdrM",
+  authDomain: "pemilossmaba.firebaseapp.com",
+  projectId: "pemilossmaba",
+  storageBucket: "pemilossmaba.firebasestorage.app",
+  messagingSenderId: "440944032139",
+  appId: "1:440944032139:web:a9c53c121940235cd0578e",
+  measurementId: "G-1YLVHKH3NV"
 };
 
 // Cek apakah konfigurasi sudah diisi atau masih placeholder
