@@ -1,0 +1,7 @@
+import App from "./App"; // <-- Baris ini memanggil file App.jsx
+
+root.render(
+  <React.StrictMode>
+    <App /> {/* <-- Dan baris ini menampilkannya */}
+  </React.StrictMode>
+);
