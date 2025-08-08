@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword, 
   signOut 
 } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 // ========================================================================
 // 1. KONFIGURASI FIREBASE
@@ -28,10 +29,11 @@ const firebaseConfig = {
 const isFirebaseConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
 
 // Inisialisasi Firebase hanya jika sudah dikonfigurasi
-let auth;
+let auth, db;
 if (isFirebaseConfigured) {
   const app = initializeApp(firebaseConfig);
   auth = getAuth(app);
+  db = getFirestore(app); // Inisialisasi Firestore
 }
 
 // ========================================================================
@@ -42,7 +44,7 @@ const LoginPage = ({ onLogin, error, loading }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
-    e.preventDefault(); // Mencegah form refresh halaman
+    e.preventDefault();
     if (!email || !password) {
       alert("Email dan password tidak boleh kosong.");
       return;
@@ -53,7 +55,7 @@ const LoginPage = ({ onLogin, error, loading }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center text-gray-900">Login</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-900">Login Pemilos</h1>
         {error && (
           <p className="text-sm text-center text-red-600 bg-red-100 p-2 rounded-md">
             {error}
@@ -96,73 +98,105 @@ const LoginPage = ({ onLogin, error, loading }) => {
 };
 
 // ========================================================================
-// Komponen Halaman Utama (Setelah Login)
+// Komponen Halaman Admin (Placeholder)
 // ========================================================================
-const HomePage = ({ user, onLogout }) => {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md text-center">
-        <h1 className="text-2xl font-bold text-gray-800">Berhasil Masuk!</h1>
-        <p className="text-gray-600">Selamat datang kembali,</p>
-        <p className="text-lg font-medium text-indigo-600 break-all">{user.email}</p>
-        <p className="text-sm text-gray-500">(Ini adalah halaman utama Anda)</p>
-        <p className="text-xs text-gray-400 break-all mt-4">UID: {user.uid}</p>
-        <button
-          onClick={onLogout}
-          className="w-full px-4 py-2 mt-6 font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
-        >
-          Keluar
-        </button>
-      </div>
-    </div>
-  );
+const AdminPage = ({ user, onLogout }) => {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+            <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-md text-center">
+                <h1 className="text-2xl font-bold">Dasbor Admin</h1>
+                <p>Selamat datang, {user.email}</p>
+                <p className="text-sm text-yellow-400">(Halaman ini hanya bisa diakses oleh Admin)</p>
+                <button
+                    onClick={onLogout}
+                    className="w-full px-4 py-2 mt-6 font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+                >
+                    Keluar
+                </button>
+            </div>
+        </div>
+    );
 };
 
+
 // ========================================================================
-// Komponen Utama (App)
+// Komponen Halaman Siswa (Placeholder)
+// ========================================================================
+const StudentPage = ({ user, onLogout }) => {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md text-center">
+                <h1 className="text-2xl font-bold text-gray-800">Halaman Pemilihan</h1>
+                <p className="text-gray-600">Selamat datang, {user.email}</p>
+                <p className="text-sm text-green-500">(Ini adalah halaman untuk siswa memilih)</p>
+                <button
+                    onClick={onLogout}
+                    className="w-full px-4 py-2 mt-6 font-semibold text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+                >
+                    Keluar
+                </button>
+            </div>
+        </div>
+    );
+};
+
+
+// ========================================================================
+// Komponen Utama (App) dengan Logika Peran
 // ========================================================================
 export default function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true); // Loading untuk cek auth awal
+  const [authLoading, setAuthLoading] = useState(false); // Loading untuk proses login
   const [loginError, setLoginError] = useState('');
 
-  // Cek status login saat aplikasi pertama kali dimuat
+  // Cek status login dan peran saat aplikasi pertama kali dimuat
   useEffect(() => {
     if (!isFirebaseConfigured) {
       setLoading(false);
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Jika ada pengguna yang login, cek perannya
+        const adminDocRef = doc(db, "config", "admins"); // Dokumen berisi daftar UID admin
+        const adminDocSnap = await getDoc(adminDocRef);
+
+        if (adminDocSnap.exists() && adminDocSnap.data().uids?.includes(currentUser.uid)) {
+          setIsAdmin(true);
+        } else {
+          setIsAdmin(false);
+        }
+        setUser(currentUser);
+      } else {
+        // Tidak ada pengguna
+        setUser(null);
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
     
-    // Cleanup listener saat komponen tidak lagi digunakan
     return () => unsubscribe();
   }, []);
 
-  // Fungsi untuk menangani proses login
   const handleLogin = (email, password) => {
     setAuthLoading(true);
     setLoginError('');
     signInWithEmailAndPassword(auth, email, password)
       .catch((error) => {
-        // Menampilkan pesan error yang lebih mudah dimengerti
         if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
           setLoginError('Email atau password yang Anda masukkan salah.');
         } else {
           setLoginError('Terjadi kesalahan saat login.');
         }
         console.error("Login Error:", error);
-      })
-      .finally(() => {
-        setAuthLoading(false);
+        setAuthLoading(false); // Pastikan loading berhenti jika error
       });
+      // State akan diupdate oleh onAuthStateChanged
   };
 
-  // Fungsi untuk menangani proses logout
   const handleLogout = () => {
     signOut(auth);
   };
@@ -181,7 +215,7 @@ export default function App() {
     );
   }
 
-  // Tampilan saat sedang memeriksa status login
+  // Tampilan saat sedang memeriksa status login awal
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -190,14 +224,22 @@ export default function App() {
     );
   }
 
-  // Tampilan utama aplikasi
+  // Render halaman berdasarkan status login dan peran
+  const renderPage = () => {
+    if (user) {
+      // Jika sudah login, tampilkan halaman sesuai peran
+      return isAdmin 
+        ? <AdminPage user={user} onLogout={handleLogout} /> 
+        : <StudentPage user={user} onLogout={handleLogout} />;
+    } else {
+      // Jika belum login, tampilkan halaman login
+      return <LoginPage onLogin={handleLogin} error={loginError} loading={authLoading} />;
+    }
+  }
+
   return (
     <div>
-      {user ? (
-        <HomePage user={user} onLogout={handleLogout} />
-      ) : (
-        <LoginPage onLogin={handleLogin} error={loginError} loading={authLoading} />
-      )}
+      {renderPage()}
     </div>
   );
 }
