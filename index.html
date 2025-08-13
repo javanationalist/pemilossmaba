@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote OSIS - Real-time</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pilih Calon Ketua & Wakil Ketua OSIS</h1>
+            <p>Pilih satu pasangan kandidat dengan menekan gambar mereka.</p>
+        </header>
+
+        <main id="candidate-list" class="candidate-grid">
+            <div class="skeleton-loader"></div>
+            <div class="skeleton-loader"></div>
+            <div class="skeleton-loader"></div>
+        </main>
+
+        <footer>
+            <a href="admin.html" class="admin-link">Masuk sebagai admin</a>
+            <button id="submit-vote" class="submit-button" disabled>Submit</button>
+        </footer>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Selesai memilih?</h2>
+            <p>Pastikan pilihan Anda sudah benar sebelum mengirim.</p>
+            <div class="modal-actions">
+                <button id="edit-choice-btn" class="button-secondary">Edit Pilihan</button>
+                <button id="confirm-submit-btn" class="button-primary">Selesai</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="thankyou-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2>Terima kasih!</h2>
+            <p>Silakan tinggalkan bilik.</p>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
