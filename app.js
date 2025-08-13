@@ -6,7 +6,12 @@ const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co'; // Ganti dengan
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8'; // Ganti dengan kunci anon Anda
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ... kode Supabase client di atas ...
 
+// --- PENGATURAN LINK REDIRECT ---
+// Ganti link di bawah ini dengan link tujuan Anda.
+// Contoh: Instagram OSIS, website sekolah, atau halaman lain.
+const LINK_TUJUAN_SETELAH_VOTE = 'https://www.instagram.com/osis.sman1bangsal';
 // Elemen DOM
 const candidateList = document.getElementById('candidate-list');
 const submitButton = document.getElementById('submit-vote');
@@ -71,6 +76,8 @@ editChoiceBtn.addEventListener('click', () => {
     confirmModal.style.display = 'none';
 });
 
+// PASTE KODE DI BAWAH INI UNTUK MENGGANTIKAN KODE YANG RUSAK
+
 // Event listener untuk tombol "Selesai" di modal
 confirmSubmitBtn.addEventListener('click', async () => {
     confirmModal.style.display = 'none';
@@ -89,11 +96,10 @@ confirmSubmitBtn.addEventListener('click', async () => {
     // Tampilkan pesan terima kasih
     thankyouModal.style.display = 'flex';
 
-    // Setelah 5 detik, reset halaman
+    // Setelah 5 detik, alihkan halaman ke link tujuan
     setTimeout(() => {
-        thankyouModal.style.display = 'none';
-        resetVotingPage();
-    }, 5000); // 5000 milidetik = 5 detik
+        window.location.href = LINK_TUJUAN_SETELAH_VOTE;
+    }, 5000); 
 });
 
 // Fungsi untuk mereset halaman voting
@@ -108,3 +114,4 @@ function resetVotingPage() {
 
 // Muat kandidat saat halaman pertama kali dibuka
 loadCandidates();
+
