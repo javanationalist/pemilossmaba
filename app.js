@@ -11,7 +11,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // --- PENGATURAN LINK REDIRECT ---
 // Ganti link di bawah ini dengan link tujuan Anda.
 // Contoh: Instagram OSIS, website sekolah, atau halaman lain.
-const LINK_TUJUAN_SETELAH_VOTE = 'https://www.instagram.com/osis.sman1bangsal';
+const LINK_TUJUAN_SETELAH_VOTE = 'https://javanationalist.github.io/pemilmpksmaba/';
 // Elemen DOM
 const candidateList = document.getElementById('candidate-list');
 const submitButton = document.getElementById('submit-vote');
@@ -114,4 +114,5 @@ function resetVotingPage() {
 
 // Muat kandidat saat halaman pertama kali dibuka
 loadCandidates();
+
 
