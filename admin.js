@@ -58,17 +58,30 @@ logoutBtn.addEventListener('click', async () => {
 });
 
 // Fungsi untuk memuat semua data admin (kandidat dan hasil)
+// Ganti seluruh fungsi lama dengan versi baru ini
 async function loadAdminData() {
-    const { data: candidates, error: candError } = await supabase.from('candidates').select('*');
-    const { data: votes, error: voteError } = await supabase.from('votes').select('candidate_id');
+    // 1. Ambil JUMLAH TOTAL suara secara akurat (tanpa limit 1000)
+    const { count: totalVotes, error: countError } = await supabase
+        .from('votes')
+        .select('*', { count: 'exact', head: true });
 
-    if (candError || voteError) {
-        console.error('Error loading admin data:', candError || voteError);
+    // 2. Ambil data suara (kita naikkan limitnya ke 10.000 untuk kalkulasi persentase)
+    const { data: votes, error: voteError } = await supabase
+        .from('votes')
+        .select('candidate_id')
+        .limit(10000);
+
+    // 3. Ambil data kandidat
+    const { data: candidates, error: candError } = await supabase.from('candidates').select('*');
+
+    if (countError || voteError || candError) {
+        console.error('Error loading admin data:', countError || voteError || candError);
         return;
     }
 
+    // Panggil fungsi display dengan data yang baru
     displayAdminCandidates(candidates);
-    displayResults(candidates, votes);
+    displayResults(candidates, votes, totalVotes); // Kirim total suara yg akurat
 }
 
 // Fungsi untuk menampilkan daftar kandidat di panel admin
@@ -88,8 +101,10 @@ function displayAdminCandidates(candidates) {
 }
 
 // Fungsi untuk menampilkan hasil voting
-function displayResults(candidates, votes) {
-    totalVotesEl.textContent = `Total Suara Masuk: ${votes.length}`;
+// Ganti seluruh fungsi lama dengan versi baru ini
+function displayResults(candidates, votes, totalCount) {
+    // Gunakan totalCount yang akurat dari query pertama
+    totalVotesEl.textContent = `Total Suara Masuk: ${totalCount}`;
     resultsContainer.innerHTML = '';
 
     const voteCounts = candidates.map(cand => ({
@@ -97,14 +112,15 @@ function displayResults(candidates, votes) {
         count: votes.filter(vote => vote.candidate_id === cand.id).length
     }));
 
-    voteCounts.sort((a, b) => b.count - a.count); // Urutkan dari suara terbanyak
+    voteCounts.sort((a, b) => b.count - a.count);
 
     voteCounts.forEach(cand => {
-        const percentage = votes.length > 0 ? ((cand.count / votes.length) * 100).toFixed(1) : 0;
+        // Gunakan totalCount untuk persentase yang lebih akurat
+        const percentage = totalCount > 0 ? ((cand.count / totalCount) * 100).toFixed(1) : 0;
         const resultItem = document.createElement('div');
         resultItem.className = 'result-item';
         resultItem.innerHTML = `
-            <span>${cand.name_ketua}</span>
+            <span>${cand.name_ketua} & ${cand.name_wakil}</span>
             <div class="progress-bar-container">
                 <div class="progress-bar" style="width: ${percentage}%;">${percentage}%</div>
             </div>
@@ -217,4 +233,5 @@ resetVotesBtn.addEventListener('click', async () => {
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
+
 
