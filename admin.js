@@ -64,7 +64,6 @@ async function loadAdminData() {
     const { count: totalVotes, error: countError } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true });
-        .limit(1000000);
 
     // 2. Ambil data suara (kita naikkan limitnya ke 10.000 untuk kalkulasi persentase)
     const { data: votes, error: voteError } = await supabase
@@ -234,6 +233,7 @@ resetVotesBtn.addEventListener('click', async () => {
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
+
 
 
 
