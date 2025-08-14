@@ -69,7 +69,7 @@ async function loadAdminData() {
     const { data: votes, error: voteError } = await supabase
         .from('votes')
         .select('candidate_id')
-        .limit(1000000);
+        .limit(100000);
 
     // 3. Ambil data kandidat
     const { data: candidates, error: candError } = await supabase.from('candidates').select('*');
@@ -233,6 +233,7 @@ resetVotesBtn.addEventListener('click', async () => {
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
+
 
 
 
