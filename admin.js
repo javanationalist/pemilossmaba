@@ -64,12 +64,13 @@ async function loadAdminData() {
     const { count: totalVotes, error: countError } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true });
+        .limit(1000000);
 
     // 2. Ambil data suara (kita naikkan limitnya ke 10.000 untuk kalkulasi persentase)
     const { data: votes, error: voteError } = await supabase
         .from('votes')
         .select('candidate_id')
-        .limit(10000);
+        .limit(1000000);
 
     // 3. Ambil data kandidat
     const { data: candidates, error: candError } = await supabase.from('candidates').select('*');
@@ -233,5 +234,6 @@ resetVotesBtn.addEventListener('click', async () => {
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
+
 
 
