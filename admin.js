@@ -1,13 +1,12 @@
 // Import Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Konfigurasi Supabase - GANTI DENGAN KUNCI ANDA
+// Konfigurasi Supabase
 const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co'; // Ganti dengan URL Proyek Anda
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8'; // Ganti dengan kunci anon Anda
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Elemen DOM
 const loginPage = document.getElementById('login-page');
 const adminDashboard = document.getElementById('admin-dashboard');
 const loginForm = document.getElementById('login-form');
@@ -18,7 +17,6 @@ const resultsContainer = document.getElementById('results-container');
 const adminCandidateList = document.getElementById('admin-candidate-list');
 const addCandidateForm = document.getElementById('add-candidate-form');
 
-// Fungsi untuk menampilkan halaman yang sesuai (login atau dashboard)
 async function handleAuthStateChange() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
@@ -28,13 +26,11 @@ async function handleAuthStateChange() {
         loadAdminData();
         listenForChanges();
     } else {
-        // Pengguna belum login
         loginPage.style.display = 'flex';
         adminDashboard.style.display = 'none';
     }
 }
 
-// Event listener untuk form login
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
@@ -47,31 +43,25 @@ loginForm.addEventListener('submit', async (e) => {
         console.error('Login error:', error.message);
     } else {
         loginError.textContent = '';
-        handleAuthStateChange(); // Muat ulang state setelah login berhasil
+        handleAuthStateChange(); 
     }
 });
 
-// Event listener untuk tombol logout
 logoutBtn.addEventListener('click', async () => {
     await supabase.auth.signOut();
-    handleAuthStateChange(); // Muat ulang state setelah logout
+    handleAuthStateChange(); 
 });
 
-// Fungsi untuk memuat semua data admin (kandidat dan hasil)
-// Ganti seluruh fungsi lama dengan versi baru ini
 async function loadAdminData() {
-    // 1. Ambil JUMLAH TOTAL suara secara akurat (tanpa limit 1000)
     const { count: totalVotes, error: countError } = await supabase
         .from('votes')
         .select('*', { count: 'exact', head: true });
 
-    // 2. Ambil data suara (kita naikkan limitnya ke 10.000 untuk kalkulasi persentase)
     const { data: votes, error: voteError } = await supabase
         .from('votes')
         .select('candidate_id')
         .limit(100000);
 
-    // 3. Ambil data kandidat
     const { data: candidates, error: candError } = await supabase.from('candidates').select('*');
 
     if (countError || voteError || candError) {
@@ -79,12 +69,10 @@ async function loadAdminData() {
         return;
     }
 
-    // Panggil fungsi display dengan data yang baru
     displayAdminCandidates(candidates);
     displayResults(candidates, votes, totalVotes); // Kirim total suara yg akurat
 }
 
-// Fungsi untuk menampilkan daftar kandidat di panel admin
 function displayAdminCandidates(candidates) {
     adminCandidateList.innerHTML = '';
     candidates.forEach(cand => {
@@ -100,8 +88,6 @@ function displayAdminCandidates(candidates) {
     });
 }
 
-// Fungsi untuk menampilkan hasil voting
-// Ganti seluruh fungsi lama dengan versi baru ini
 function displayResults(candidates, votes, totalCount) {
     // Gunakan totalCount yang akurat dari query pertama
     totalVotesEl.textContent = `Total Suara Masuk: ${totalCount}`;
@@ -130,8 +116,6 @@ function displayResults(candidates, votes, totalCount) {
     });
 }
 
-
-// Event listener untuk form tambah kandidat
 addCandidateForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const newCandidate = {
@@ -150,7 +134,6 @@ addCandidateForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Event listener untuk tombol hapus kandidat (event delegation)
 adminCandidateList.addEventListener('click', async (e) => {
     if (e.target.classList.contains('delete-btn')) {
         const id = e.target.dataset.id;
@@ -169,7 +152,6 @@ adminCandidateList.addEventListener('click', async (e) => {
 });
 
 
-// Fungsi untuk mendengarkan perubahan REAL-TIME dari Supabase
 function listenForChanges() {
     supabase
         .channel('public:votes')
@@ -233,6 +215,7 @@ resetVotesBtn.addEventListener('click', async () => {
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
+
 
 
 
