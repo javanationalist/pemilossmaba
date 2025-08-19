@@ -1,15 +1,14 @@
 // Import Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Konfigurasi Supabase - GANTI DENGAN KUNCI ANDA
+// Konfigurasi Supabase
 const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co'; // Ganti dengan URL Proyek Anda
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8'; // Ganti dengan kunci anon Anda
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Contoh: Instagram OSIS, website sekolah, atau halaman lain.
 const LINK_TUJUAN_SETELAH_VOTE = 'https://javanationalist.github.io/pemilmpksmaba/';
-// Elemen DOM
+
 const candidateList = document.getElementById('candidate-list');
 const submitButton = document.getElementById('submit-vote');
 const confirmModal = document.getElementById('confirm-modal');
@@ -19,7 +18,6 @@ const confirmSubmitBtn = document.getElementById('confirm-submit-btn');
 
 let selectedCandidateId = null;
 
-// Fungsi untuk memuat kandidat dari Supabase
 async function loadCandidates() {
     const { data, error } = await supabase
         .from('candidates')
@@ -45,7 +43,6 @@ async function loadCandidates() {
     });
 }
 
-// Event listener untuk memilih kandidat
 candidateList.addEventListener('click', (e) => {
     const card = e.target.closest('.candidate-card');
     if (!card) return;
@@ -60,22 +57,16 @@ candidateList.addEventListener('click', (e) => {
     // Aktifkan tombol submit
     submitButton.disabled = false;
 });
-
-// Event listener untuk tombol submit
 submitButton.addEventListener('click', () => {
     if (selectedCandidateId) {
         confirmModal.style.display = 'flex';
     }
 });
 
-// Event listener untuk tombol "Edit Pilihan" di modal
 editChoiceBtn.addEventListener('click', () => {
     confirmModal.style.display = 'none';
 });
 
-// PASTE KODE DI BAWAH INI UNTUK MENGGANTIKAN KODE YANG RUSAK
-
-// Event listener untuk tombol "Selesai" di modal
 confirmSubmitBtn.addEventListener('click', async () => {
     confirmModal.style.display = 'none';
     
@@ -99,7 +90,6 @@ confirmSubmitBtn.addEventListener('click', async () => {
     }, 5000); 
 });
 
-// Fungsi untuk mereset halaman voting
 function resetVotingPage() {
     selectedCandidateId = null;
     submitButton.disabled = true;
@@ -108,9 +98,8 @@ function resetVotingPage() {
     // loadCandidates();
 }
 
-
-// Muat kandidat saat halaman pertama kali dibuka
 loadCandidates();
+
 
 
 
