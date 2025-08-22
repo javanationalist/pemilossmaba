@@ -11,6 +11,7 @@
 </head>
 <body>
 
+    <!-- Login Page -->
     <div id="login-page" class="container">
         <div class="login-form-container">
             <h1>Masuk Sebagai Admin</h1>
@@ -23,13 +24,14 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" required>
                 </div>
-                <button type="submit" class="button-primary full-width">Masuk</button>
+                <button type="submit" class="button-base button-primary full-width">Masuk</button>
                 <p id="login-error" class="error-message"></p>
             </form>
              <a href="index.html" class="admin-link" style="text-align: center; display:block; margin-top: 20px;">Kembali ke Halaman Voting</a>
         </div>
     </div>
 
+    <!-- Admin Dashboard -->
     <div id="admin-dashboard" class="container" style="display: none;">
         <header class="admin-header">
             <div>
@@ -38,22 +40,24 @@
                     <span id="total-votes">Total Suara Masuk: 0</span>
                 </div>
             </div>
-            <button id="logout-btn" class="button-secondary">Keluar</button>
+            <button id="logout-btn" class="button-base button-secondary">Keluar</button>
         </header>
 
         <section class="card">
-    <div class="card-header">
-        <h2>Hasil Perolehan Suara (Real-time)</h2>
-        <button id="reset-votes-btn" class="button-danger">Reset Hasil Suara</button>
-    </div>
-    <div id="results-container">
-        </div>
-</section>
+            <div class="card-header">
+                <h2>Hasil Perolehan Suara (Real-time)</h2>
+                <button id="reset-votes-btn" class="button-base button-danger">Reset Hasil Suara</button>
+            </div>
+            <div id="results-container">
+                <!-- Voting results will be dynamically inserted here -->
+            </div>
+        </section>
 
         <section class="card">
             <h2>Manajemen Kandidat</h2>
             <div id="admin-candidate-list">
-                </div>
+                <!-- Candidate list for admin will be dynamically inserted here -->
+            </div>
         </section>
 
         <section class="card">
@@ -75,7 +79,7 @@
                     <label>URL Foto Kandidat</label>
                     <input type="text" id="photo-url" placeholder="Contoh: https://example.com/foto.jpg" required>
                 </div>
-                <button type="submit" class="button-primary">Tambah Kandidat</button>
+                <button type="submit" class="button-base button-primary">Tambah Kandidat</button>
             </form>
         </section>
     </div>
@@ -83,4 +87,3 @@
     <script type="module" src="admin.js"></script>
 </body>
 </html>
-
