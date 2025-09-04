@@ -1,12 +1,8 @@
-// Import Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Konfigurasi Supabase
-const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co'; // Ganti dengan URL Proyek Anda
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8'; // Ganti dengan kunci anon Anda
-
+const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 const LINK_TUJUAN_SETELAH_VOTE = 'https://javanationalist.github.io/pemilmpksmaba/';
 
 const candidateList = document.getElementById('candidate-list');
@@ -29,7 +25,7 @@ async function loadCandidates() {
         return;
     }
 
-    candidateList.innerHTML = ''; // Hapus skeleton loader
+    candidateList.innerHTML = '';
     data.forEach(candidate => {
         const card = document.createElement('div');
         card.className = 'candidate-card';
@@ -47,14 +43,11 @@ candidateList.addEventListener('click', (e) => {
     const card = e.target.closest('.candidate-card');
     if (!card) return;
 
-    // Hapus kelas 'selected' dari semua kartu
     document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
-    
-    // Tambah kelas 'selected' ke kartu yang diklik
+
     card.classList.add('selected');
     selectedCandidateId = card.dataset.id;
-    
-    // Aktifkan tombol submit
+
     submitButton.disabled = false;
 });
 submitButton.addEventListener('click', () => {
@@ -69,8 +62,7 @@ editChoiceBtn.addEventListener('click', () => {
 
 confirmSubmitBtn.addEventListener('click', async () => {
     confirmModal.style.display = 'none';
-    
-    // Kirim vote ke Supabase
+
     const { error } = await supabase
         .from('votes')
         .insert([{ candidate_id: selectedCandidateId }]);
@@ -80,11 +72,9 @@ confirmSubmitBtn.addEventListener('click', async () => {
         alert('Maaf, terjadi kesalahan saat mengirim suara Anda.');
         return;
     }
-    
-    // Tampilkan pesan terima kasih
+
     thankyouModal.style.display = 'flex';
 
-    // Setelah 5 detik, alihkan halaman ke link tujuan
     setTimeout(() => {
         window.location.href = LINK_TUJUAN_SETELAH_VOTE;
     }, 5000); 
@@ -94,12 +84,7 @@ function resetVotingPage() {
     selectedCandidateId = null;
     submitButton.disabled = true;
     document.querySelectorAll('.candidate-card').forEach(c => c.classList.remove('selected'));
-    // Opsional: Anda bisa memuat ulang kandidat jika ada perubahan
     // loadCandidates();
 }
 
 loadCandidates();
-
-
-
-
