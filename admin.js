@@ -1,10 +1,7 @@
-// Import Supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Konfigurasi Supabase
 const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co'; // Ganti dengan URL Proyek Anda
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8'; // Ganti dengan kunci anon Anda
-
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const loginPage = document.getElementById('login-page');
@@ -20,7 +17,6 @@ const addCandidateForm = document.getElementById('add-candidate-form');
 async function handleAuthStateChange() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
-        // Pengguna sudah login
         loginPage.style.display = 'none';
         adminDashboard.style.display = 'flex';
         loadAdminData();
@@ -70,7 +66,7 @@ async function loadAdminData() {
     }
 
     displayAdminCandidates(candidates);
-    displayResults(candidates, votes, totalVotes); // Kirim total suara yg akurat
+    displayResults(candidates, votes, totalVotes);
 }
 
 function displayAdminCandidates(candidates) {
@@ -89,7 +85,6 @@ function displayAdminCandidates(candidates) {
 }
 
 function displayResults(candidates, votes, totalCount) {
-    // Gunakan totalCount yang akurat dari query pertama
     totalVotesEl.textContent = `Total Suara Masuk: ${totalCount}`;
     resultsContainer.innerHTML = '';
 
@@ -101,7 +96,6 @@ function displayResults(candidates, votes, totalCount) {
     voteCounts.sort((a, b) => b.count - a.count);
 
     voteCounts.forEach(cand => {
-        // Gunakan totalCount untuk persentase yang lebih akurat
         const percentage = totalCount > 0 ? ((cand.count / totalCount) * 100).toFixed(1) : 0;
         const resultItem = document.createElement('div');
         resultItem.className = 'result-item';
@@ -130,7 +124,7 @@ addCandidateForm.addEventListener('submit', async (e) => {
         alert('Gagal menambah kandidat: ' + error.message);
     } else {
         addCandidateForm.reset();
-        loadAdminData(); // Muat ulang data setelah berhasil
+        loadAdminData();
     }
 });
 
@@ -138,14 +132,13 @@ adminCandidateList.addEventListener('click', async (e) => {
     if (e.target.classList.contains('delete-btn')) {
         const id = e.target.dataset.id;
         if (confirm('Apakah Anda yakin ingin menghapus kandidat ini? Ini tidak bisa dibatalkan.')) {
-            // Sebaiknya, Anda juga hapus suara yang terkait dengan kandidat ini.
             await supabase.from('votes').delete().eq('candidate_id', id);
             const { error } = await supabase.from('candidates').delete().eq('id', id);
 
             if (error) {
                 alert('Gagal menghapus kandidat: ' + error.message);
             } else {
-                loadAdminData(); // Muat ulang data
+                loadAdminData();
             }
         }
     }
@@ -157,7 +150,7 @@ function listenForChanges() {
         .channel('public:votes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'votes' }, payload => {
             console.log('Perubahan pada votes terdeteksi!', payload);
-            loadAdminData(); // Muat ulang data setiap ada suara baru
+            loadAdminData();
         })
         .subscribe();
 
@@ -165,59 +158,41 @@ function listenForChanges() {
         .channel('public:candidates')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'candidates' }, payload => {
             console.log('Perubahan pada candidates terdeteksi!', payload);
-            loadAdminData(); // Muat ulang data setiap ada perubahan kandidat
+            loadAdminData();
         })
         .subscribe();
 }
 
-// Jalankan pengecekan otentikasi saat halaman pertama kali dimuat
 handleAuthStateChange();
 
-// --- LOGIKA UNTUK RESET HASIL SUARA ---
-
-// Ambil elemen tombol reset
 const resetVotesBtn = document.getElementById('reset-votes-btn');
 
-// Tambahkan event listener untuk klik
 resetVotesBtn.addEventListener('click', async () => {
-    // Tampilkan pesan konfirmasi yang sangat jelas
     const isConfirmed = confirm(
         'APAKAH ANDA YAKIN?\n\n' +
         'Anda akan menghapus SEMUA data suara yang telah masuk. ' +
         'Aksi ini tidak dapat dibatalkan dan akan mengembalikan perolehan suara ke 0.'
     );
 
-    // Jika pengguna menekan "OK" di kotak konfirmasi
     if (isConfirmed) {
         console.log('Menjalankan proses reset suara...');
 
-        // Hapus semua baris dari tabel 'votes'
-        // Kita menggunakan .neq('id', -1) sebagai cara untuk menargetkan semua baris
         const { error } = await supabase
             .from('votes')
             .delete()
-            .neq('id', -1); // Target semua baris (id tidak sama dengan -1)
+            .neq('id', -1);
 
         if (error) {
             // Jika terjadi error
             console.error('Gagal mereset data suara:', error);
             alert('Terjadi kesalahan saat mereset data: ' + error.message);
         } else {
-            // Jika berhasil
             console.log('Semua data suara berhasil dihapus.');
             alert('Semua data suara berhasil direset.');
             
-            // Muat ulang data admin untuk menampilkan hasil yang sudah 0
             loadAdminData();
         }
     } else {
-        // Jika pengguna menekan "Cancel"
         console.log('Proses reset dibatalkan oleh pengguna.');
     }
 });
-
-
-
-
-
-
