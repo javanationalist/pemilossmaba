@@ -25,3 +25,4 @@ document.onkeydown = e => {
         return false
 
     }
+}
