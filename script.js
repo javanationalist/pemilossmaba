@@ -1,27 +1,27 @@
 //Prevent right click
 document.oncontextmenu = () => {
-    alert("Jangan klik kanan woi")
+    alert("Right click isn't allowed here.")
     return false
 }
 
 document.onkeydown = e => {
     if(e.key == "F12") {
-        alert ("Ojok diinspect web iki.")
+        alert ("Don't press the F12 key!")
         return false
     }
 
     if(e.ctrlKey && e.key == "u") {
-        alert ("Wes gak aneh aneh.")
+        alert ("Can't do that.")
         return false
     }
 
     if(e.ctrlKey && e.key == "c") {
-        alert ("Wes gak woiii gak aneh aneh.")
+        alert ("Failed copying this website. Please don't try again.")
         return false
     }
    
     if(e.ctrlKey && e.key == "v") {
-        alert ("Wes gak aneh aneh wes diam yah.")
+        alert ("Can't paste anything to this website. Please don't try again.")
         return false
 
     }
