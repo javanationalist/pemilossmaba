@@ -76,7 +76,7 @@ confirmSubmitBtn.addEventListener('click', async () => {
 
     setTimeout(() => {
         window.location.href = LINK_TUJUAN_SETELAH_VOTE;
-    }, 5000); 
+    }, 6000); 
 });
 
 function resetVotingPage() {
@@ -87,6 +87,7 @@ function resetVotingPage() {
 }
 
 loadCandidates();
+
 
 
 
