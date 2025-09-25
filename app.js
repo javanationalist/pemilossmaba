@@ -3,7 +3,6 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const SUPABASE_URL = 'https://htwttxfjvsopnewepkaq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0d3R0eGZqdnNvcG5ld2Vwa2FxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjk4OTcsImV4cCI6MjA3MDY0NTg5N30.XJlI-qF7A_YFIzrEQHbuIRQ8tu3XeCe6A0C85hoxdX8';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const LINK_TUJUAN_SETELAH_VOTE = 'https://javanationalist.github.io/pemilossmaba/';
 
 const candidateList = document.getElementById('candidate-list');
 const submitButton = document.getElementById('submit-vote');
@@ -88,4 +87,5 @@ function resetVotingPage() {
 }
 
 loadCandidates();
+
 
