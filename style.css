@@ -100,6 +100,8 @@ p {
     font-size: 15px;
     color: var(--secondary-text-color);
     margin-top: 8px;
+    text-align: left;
+    white-space: pre-wrap;
 }
 
 .skeleton-loader {
@@ -366,4 +368,5 @@ footer {
 .card-header h2 {
     margin: 0;
 }
+
 
