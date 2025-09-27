@@ -369,4 +369,29 @@ footer {
     margin: 0;
 }
 
+    <style>
+        /* CSS ini ditambahkan untuk membuat animasi fade-in/out */
+        .modal-overlay {
+            /* Properti yang diubah untuk transisi */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s linear 0.4s;
+        }
+
+        /* Kelas 'show' akan ditambahkan oleh JavaScript untuk menampilkan modal */
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .modal-content {
+            /* Animasi skala untuk efek 'pop' */
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+    }
 
