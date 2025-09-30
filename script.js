@@ -16,12 +16,12 @@ document.onkeydown = e => {
     }
 
     if(e.ctrlKey && e.key == "c") {
-        alert ("Failed copying this website. Please don't try again.")
+        alert ("Failed copying this website.")
         return false
     }
    
     if(e.ctrlKey && e.key == "v") {
-        alert ("Can't paste anything to this website. Please don't try again.")
+        alert ("Can't paste anything to this website.")
         return false
 
     }
