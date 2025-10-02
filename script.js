@@ -5,11 +5,6 @@ document.oncontextmenu = () => {
 }
 
 document.onkeydown = e => {
-    if(e.key == "F12") {
-        alert ("Don't press the F12 key!")
-        return false
-    }
-
     if(e.ctrlKey && e.key == "u") {
         alert ("Can't do that.")
         return false
