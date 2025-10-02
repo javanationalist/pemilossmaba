@@ -19,10 +19,4 @@ document.onkeydown = e => {
         alert ("Failed copying this website.")
         return false
     }
-   
-    if(e.ctrlKey && e.key == "v") {
-        alert ("Can't paste anything to this website.")
-        return false
-
-    }
 }
